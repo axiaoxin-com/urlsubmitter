@@ -2,6 +2,7 @@ package urlsubmitter
 
 import (
 	"bytes"
+	"errors"
 	"io"
 	"net/http"
 	"strings"
@@ -38,6 +39,10 @@ func (b *BaiduSubmitter) SubmitURLs(urls []string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	bodystr := string(body)
+	if strings.Contains(bodystr, "error") {
+		return "", errors.New(bodystr)
+	}
 
-	return string(body), nil
+	return bodystr, nil
 }
