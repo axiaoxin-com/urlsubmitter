@@ -9,7 +9,7 @@ import (
 
 // BaiduSubmitter is a URL submitter for Baidu.
 type BaiduSubmitter struct {
-	API string // API endpoint for submitting URLs to Baidu.
+	API string // API endpoint for submitting URLs to Baidu. Baidu搜索资源平台-资源提交-普通收录-API提交-推送接口
 }
 
 // NewBaiduSubmitter creates a new BaiduSubmitter with the given API endpoint.

@@ -12,7 +12,7 @@ import (
 
 // GoogleSubmitter is a URL submitter for Google's Indexing API.
 type GoogleSubmitter struct {
-	CredentialsFile string
+	CredentialsFile string // 谷歌 indexing-api 服务账号密钥文件路径
 }
 
 // NewGoogleSubmitter creates a new GoogleSubmitter with the given credentials file.

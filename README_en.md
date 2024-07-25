@@ -84,6 +84,52 @@ func main() {
 }
 ```
 
+`UniversalSubmitter` example:
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/axiaoxin-com/urlsubmitter"
+)
+
+func main() {
+	options := &urlsubmitter.UniversalOptions{
+		BaiduAPI:            os.Getenv("BAIDU_API"),
+		BingKey:             os.Getenv("BING_KEY"),
+		BingKeyLocation:     os.Getenv("BING_KEY_LOCATION"),
+		BingHost:            os.Getenv("BING_SUBMIT_HOST"),
+		GoogleCredentialsFile: os.Getenv("GOOGLE_CREDENTIALS_FILE"),
+	}
+
+	universal := urlsubmitter.NewUniversalSubmitter(options)
+	if universal == nil {
+		log.Fatal("No valid submitter configurations provided.")
+	}
+
+	urls := []string{
+		"http://www.example.com/1.html",
+		"http://www.example.com/2.html",
+		"https://www.example.org/url1",
+		"https://www.example.org/folder/url2",
+		"https://example.com/new-url/",
+	}
+
+	results, err := universal.SubmitURLs(urls)
+	if err != nil {
+		log.Fatalf("Failed to submit URLs: %v", err)
+	}
+
+	for platform, result := range results {
+		fmt.Printf("%s: %s\n", platform, result)
+	}
+}
+```
+
 ## Running Unit Tests
 
 You can run unit tests using the following commands, ensuring you set the necessary environment variables:
