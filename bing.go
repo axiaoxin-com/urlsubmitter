@@ -3,6 +3,7 @@ package urlsubmitter
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"net/http"
 )
 
@@ -49,6 +50,10 @@ func (m *BingSubmitter) SubmitURLs(urls []string) (string, error) {
 	resp, err := client.Do(req)
 	if err != nil {
 		return "", err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return "", errors.New("response status code must 200:" + resp.Status)
 	}
 
 	return resp.Status, nil
