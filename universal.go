@@ -1,6 +1,9 @@
 package urlsubmitter
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 type UniversalOptions struct {
 	BaiduAPI string // Baidu搜索资源平台-资源提交-普通收录-API提交-推送接口
@@ -49,27 +52,28 @@ func NewUniversalSubmitter(options *UniversalOptions) *UniversalSubmitter {
 // SubmitURLs submits URLs to all platforms.
 func (s *UniversalSubmitter) SubmitURLs(urls []string) (map[string]string, error) {
 	results := make(map[string]string)
+	var errs error
 
 	baiduResult, err := s.BaiduSubmitter.SubmitURLs(urls)
 	if err != nil {
-		results["baidu"] = fmt.Sprintf("error: %v", err)
+		errs = errors.Join(errs, fmt.Errorf("BaiduError: %w", err))
 	} else {
 		results["baidu"] = baiduResult
 	}
 
 	bingResult, err := s.BingSubmitter.SubmitURLs(urls)
 	if err != nil {
-		results["bing"] = fmt.Sprintf("error: %v", err)
+		errs = errors.Join(errs, fmt.Errorf("BingError: %w", err))
 	} else {
 		results["bing"] = bingResult
 	}
 
 	googleResult, err := s.GoogleSubmitter.SubmitURLs(urls)
 	if err != nil {
-		results["google"] = fmt.Sprintf("error: %v", err)
+		errs = errors.Join(errs, fmt.Errorf("GoogleError: %w", err))
 	} else {
 		results["google"] = googleResult
 	}
 
-	return results, nil
+	return results, errs
 }

@@ -3,6 +3,7 @@ package urlsubmitter
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 
@@ -30,6 +31,7 @@ func (g *GoogleSubmitter) SubmitURLs(urls []string) (string, error) {
 	}
 
 	results := make([]string, 0, len(urls))
+	var errs error
 	for _, url := range urls {
 		data := &indexing.UrlNotification{
 			Type: "URL_UPDATED",
@@ -37,12 +39,12 @@ func (g *GoogleSubmitter) SubmitURLs(urls []string) (string, error) {
 		}
 		rsp, err := client.UrlNotifications.Publish(data).Do()
 		if err != nil {
-			results = append(results, fmt.Sprintf("Error: %v", err))
+			errs = errors.Join(errs, fmt.Errorf("Publish %s failed: %w", url, err))
 		} else {
 			rspjson, _ := json.MarshalIndent(rsp, "", " ")
 			results = append(results, string(rspjson))
 		}
 	}
 
-	return strings.Join(results, "\n"), nil
+	return strings.Join(results, "\n"), errs
 }
