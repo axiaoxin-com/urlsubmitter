@@ -45,7 +45,6 @@ func main() {
 
     // 初始化 Bing 提交器
     bingSubmitter := urlsubmitter.NewBingSubmitter(
-        "https://api.indexnow.org/IndexNow",
         "www.example.org",
         "bingkey",
         "https://www.example.org/keylocation.txt",
