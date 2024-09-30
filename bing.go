@@ -52,9 +52,9 @@ func (m *BingSubmitter) SubmitURLs(urls []string) (string, error) {
 		return "", err
 	}
 
-	if resp.StatusCode != http.StatusOK {
-		return "", errors.New("response status code must 200:" + resp.Status)
+	if resp.StatusCode == http.StatusOK || resp.StatusCode == http.StatusAccepted {
+		// 202 Accepted: 手动在后台提交后再通过API提交就会出现 202
+		return resp.Status, nil
 	}
-
-	return resp.Status, nil
+	return "", errors.New("invalid response status code:" + resp.Status)
 }
